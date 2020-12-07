@@ -39,8 +39,8 @@ class Deck:
         for suit in SUITS:
             for rank in RANKS:
                 self.deck.append(Card(suit, rank))
-        for joker in 
-        self.deck.append(Card())
+        for joker in JOKERS: 
+            self.deck.append(Card())
 
     def shuffle(self):
         '''
