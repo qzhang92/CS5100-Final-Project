@@ -6,6 +6,7 @@ played and managed by the player of a game.
 '''
 
 import random
+from functools import total_ordering
 
 # Char representations of suits
 # Hearts, Diamonds, Clubs, Spades
@@ -15,7 +16,12 @@ SUITS = set(['H', 'D', 'C', 'S'])
 RANKS = set(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'])
 
 # Char representations of Jokers
-JOKERS = set(['BJoker', 'CJoker'])
+JOKERS = set(['BJoker', 'RJoker'])
+
+INITIAL_CARD_NUM = 17
+
+EXTRA_CARD_NUM = 3
+
 
 
 class Deck:
@@ -40,7 +46,7 @@ class Deck:
             for rank in RANKS:
                 self.deck.append(Card(suit, rank))
         for joker in JOKERS: 
-            self.deck.append(Card())
+            self.deck.append(Card('H', 'A',joker))
 
     def shuffle(self):
         '''
@@ -57,6 +63,7 @@ class Deck:
 
         return self.deck.pop()
 
+    # Not used
     def add_card_to_bottom(self, card):
         '''
         Adds the given card to the bottom of the deck. The card can not be
@@ -84,7 +91,7 @@ class Card:
     Represents a standard playing card with a suit and rank.
     '''
 
-    def __init__(self, suit, rank):
+    def __init__(self, suit, rank, joker = None):
         '''
         Creates a Card.
 
@@ -96,27 +103,86 @@ class Card:
             raise ValueError('invalid suit')
         if rank not in RANKS:
             raise ValueError('invalid rank')
+        
+        if joker != None:
+            self.__init_joker__(joker)
+            return
 
         self.suit = suit
         self.rank = rank
 
+        if self.rank == 'A':
+            self.value = 140
+        if self.rank == 'K':
+            self.value = 130
+        if self.rank == 'Q':
+            self.value = 120
+        if self.rank == 'J':
+            self.value = 110
+        if self.rank == '10':
+            self.value = 100
+        if self.rank == '9':
+            self.value = 90
+        if self.rank == '8':
+            self.value = 80
+        if self.rank == '7':
+            self.value = 70
+        if self.rank == '6':
+            self.value = 60
+        if self.rank == '5':
+            self.value = 50
+        if self.rank == '4':
+            self.value = 40
+        if self.rank == '3':
+            self.value = 30
+        if self.rank == '2':
+            self.value = 150
+
         # Assign UTF suit also
         if suit == 'H':
             self.utf_suit = '♥'    # U+2665
+            self.value += 1
         elif suit == 'D':
             self.utf_suit = '♦'    # U+2666
+            self.value += 2
         elif suit == 'C':
             self.utf_suit = '♣'    # U+2663
+            self.value += 3
         else:
             # Must be spade, from check above
             self.utf_suit = '♠'    # U+2660
+            self.value += 4
     
-    def __init__(self, joker):
+    def __init_joker__(self, joker):
         '''
         Creates a Joker Card.
         '''
+        if joker not in JOKERS:
+            raise ValueError('invalid card')
+        
+        self.suit = joker[0]
+        self.rank = joker[1:]
+        if self.suit == 'B':
+            self.value = 160
+        else:
+            self.value = 170
+
+        self.utf_suit = self.suit
+
+    def __eq__(self, other):
+        return (self.value == other.value)
+
+    def __ne__(self, other):
+        return not (self.value == other.value)
+
+    def __lt__(self, other):
+        return (self.value < other.value)
 
 
+    '''
+    def compare(card_1, card_2):
+        return card_1.value - card_2.value
+    '''
 
     def __str__(self):
         '''
@@ -129,6 +195,9 @@ class Card:
         if self.rank == '10':
             rank_top =    '|10   |\n'
             rank_bottom = '|   10|\n'
+        elif self.rank == 'Joker':
+            rank_top =    '|Joker|\n'
+            rank_bottom = '|Joker|\n'
         else:
             rank_top =    '|' + self.rank + '    |\n'
             rank_bottom = '|    ' + self.rank + '|\n'
@@ -147,13 +216,13 @@ class Hand:
     Hand represents a hand of cards that a poker player might have.
     '''
 
-    def __init__(self, num_cards):
+    def __init__(self):
         '''
         Creates an empty hand.
 
         num_cards: int - the number of cards a hand should contain
         '''
-        self.max_len = num_cards
+        #self.max_len = INITIAL_CARD_NUM
         self.hand = []
 
     def add_card(self, card):
@@ -165,8 +234,6 @@ class Hand:
         '''
         if not isinstance(card, Card):
             raise TypeError('card must be of type Card')
-        if len(self.hand) >= self.max_len:
-            raise HandFullError()
 
         self.hand.append(card)
 
@@ -208,6 +275,9 @@ class Hand:
         for i, card in enumerate(self.hand):
             print(i+1)
             print(card)
+
+    def sort_card(self):
+        self.hand.sort()
 
     def __repr__(self):
         '''
