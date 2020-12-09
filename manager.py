@@ -12,11 +12,13 @@ class Manager:
         self.card_style['trio'] = 3
         self.card_style['triosolo'] = 4
         self.card_style['triopair'] = 5
+        '''
         self.card_style['chain'] = 6
         self.card_style['pairchain'] = 7
         self.card_style['airplane'] = 8
         self.card_style['airplanewingsolo'] = 9
         self.card_style['airplanewingpair'] = 10
+        '''
         self.card_style['bomb'] = 11
         self.card_style['rocket'] = 12
         
@@ -147,7 +149,7 @@ class Manager:
                     return -1
             elif size == 5:
                 if len(card_dict) == 5: # 5 different cards. maybe chain
-                    return self.handle_chain(card_dict)
+                    return -1#self.handle_chain(card_dict)
                 elif len(card_dict) == 2: #only 3 + 2 is ok.
                     for key in card_dict:
                         if card_dict[key] == 3 or card_dict[key] == 2:
@@ -156,6 +158,7 @@ class Manager:
                             return -1
                 else: #len(card_dict) won't be 1, can be 3, 4, which are invalid
                     return -1
+            '''
             elif size == 6:
                 if len(card_dict) == size: # 6 different cards. maybe chain
                     return self.handle_chain(card_dict) ? 6 : -1
@@ -215,6 +218,9 @@ class Manager:
                 #else if size % 5 == 0: #air plane with double pair too hard, return -1
                 else:
                     return -1
+            '''
+            else:
+                return -1
 
     def evaluate_cards(cur_cards, prev_action):
         '''
@@ -310,4 +316,85 @@ class Manager:
         '''
         List legal actions
         hand: current hand of the game
+        https://github.com/thuxugang/doudizhu/blob/master/myclass.py
+
+        Airplane and chain may be removed. They are super hard
+
+        The moves are based on 1-index card index. Because cards.Hand.remove(self, card_id)
         '''
+        result = dict{}
+        card_dict = dict()
+        for card in hand:
+            key = int(card.value / 10)
+            if key in card_dict:
+                card_dict[key] += 1
+            else:
+                card_dict[key] = 1
+        for i in range(1, 13):
+            result[i] = []
+        # 1
+        for i in range(1, len(hand) + 1):
+            action = [card]
+            result[1].append(action)
+        # 2
+        for key in card_dict:
+            if card_dict[key] >= 2:
+                card = self.get_card_from_hand(hand, key, 2)
+                result[2].append(card) 
+        # 3
+        for key in card_dict:
+            if card_dict[key] >= 3:
+                card = self.get_card_from_hand(hand, key, 3)
+                result[3].append(card)
+        # 4
+        for key in card_dict:
+            if card_dict[key] >= 3:
+                for i in range(0, len(hand)):
+                    card = self.get_card_from_hand(hand, key, 3)
+                    if i not in card:
+                        card.append(i)
+                    result[4].append(card)
+        # 5
+        for key in card_dict:
+            if card_dict[key] >= 3:
+                for i in range(0, len(hand)):
+                    card = self.get_card_from_hand(hand, key, 3)
+                    for array in result[2]:
+                        if array[0] not in card and array[1] not in card:
+                            card.append(array[0])
+                            card.append(array[1])
+                    result[5].append(card)
+        # 11
+        for key in card_dict:
+            if card_dict[key]== 4:
+                card = self.get_card_from_hand(hand, key, 4)
+                result[11].append(card)
+        # 12
+        b_joker = False
+        r_joker = False
+        for key in card_dict:
+            if key == 16:
+                b_joker = True
+            if key == 17:
+                r_joker = True
+        if b_joker and r_joker:
+            action =[self.get_card_from_hand(hand, 16, 1)[0], self.get_card_from_hand(hand, 17, 1)[0]]
+            result[12].append(action)
+
+        return result
+
+    
+    def get_card_from_hand(hand, key, num):
+        result = []
+        for i in range(len(hand)):
+            card = hand[i]
+            val = int(card.value / 10)
+            if val == key:
+                result.append(i)
+                num -= 1
+                if num == 0:
+                    return result
+        return [-1]
+
+        
+        
