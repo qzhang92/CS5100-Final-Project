@@ -111,6 +111,7 @@ class Card:
         self.suit = suit
         self.rank = rank
 
+        #Note all values rank * 10 + suit
         if self.rank == 'A':
             self.value = 140
         if self.rank == 'K':
@@ -276,7 +277,7 @@ class Hand:
             print(i+1)
             print(card)
 
-    def sort_card(self):
+    def sort_cards(self):
         self.hand.sort()
 
     def __repr__(self):
