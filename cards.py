@@ -111,6 +111,7 @@ class Card:
         self.suit = suit
         self.rank = rank
 
+        #Note all values rank * 10 + suit
         if self.rank == 'A':
             self.value = 140
         if self.rank == 'K':

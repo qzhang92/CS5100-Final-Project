@@ -73,8 +73,9 @@ def game_play(players, landlord):
     cur = landlord
     positive = True
     manager = manager.Manager()
-    prev_action = ""
+    prev_action = -1 # repesented by an index. See manager.card_style
     last_player = 0
+    prev_cards = []
     while not game_over(players):
 
         if last_player == cur and not positive:
@@ -84,17 +85,17 @@ def game_play(players, landlord):
             valid = False
             while not valid:
                 # handle input
-                cards = input("Please choose what card you want to play. \n Example: if you want to play H3 C3, type in: H3 C3 \n")
-                card_list, valid = handle_input(cards)
+                cards = input("Please choose what card you want to play. \n Example: if you want to play 1st and 13rd card, type in: 1 13. 1-indexed \n")
+                card_list, valid = handle_input(cards, len(player.hand.hand))
                 if valid and len(card_list) == 0 and positive:
                     print("Fisrt player must play cards.")
                     continue
                 if valid and len(card_list) == 0: # Did not play card
                     break
-                if manager.is_valid_play(card_list, positive, prev_action):
+                if manager.is_valid_play(card_list, player.hand.hand, positive, prev_action, prev_cards):
                     print("Play : {}".format(card_list))
-                    players[cur].card_play(card_list)
-                    prev_action = manager.get_action(card_list)
+                    prev_cards = players[cur].card_play(card_list)
+                    prev_action = manager.get_action(prev_cards)
                     valid = True
                     last_player = cur
                 else:
@@ -103,29 +104,49 @@ def game_play(players, landlord):
             if positive:
                 positive = False
         else: # Computer
-            card_list = manager.AI_play(players[cur], cur, positive) # AI should play when it can play
+            card_list = manager.AI_play(players[cur], cur, positive, prev_action, prev_cards) # AI should play when it can play
             if len(card_list) == 0:
                 continue
-            players[cur].card_play(card_list)
+            prev_cards = players[cur].card_play(card_list)
             last_player = cur
             # Change positive if possible
             if positive:
                 positive = False
 
+        cur = cur % 3
+        cur += 1
+
 
 def game_over(players):
+    '''
+    Check if the game is over
+    When a player has no card in hand, it will win and game is over
+    '''
+    for player in players:
+        if player.is_hand_empty():
+            print("Game is over. {} wins.".format(player.id))
+            return True
     return False
 
-def handle_input(cards):
+def handle_input(cards, hand_len):
     '''
     Turn the input string to a list of card
     return the list of card and if the input is valid
     '''
     if cards == None or len(cards) == 0:
         return [], True
-    # Todo 
+
     cards = cards.strip().split()
-    pass
+    result = []
+    for card in cards:
+        try:
+            index = int(card)
+            if index < 1 or index > hand_len:
+                return [], False
+            result.append(index)
+            return result
+        except ValueError:
+            return [], False
     
 
 if __name__ == '__main__':

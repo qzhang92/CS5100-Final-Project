@@ -80,7 +80,23 @@ class Player:
         return score
 
     def card_play((self, card_list):
-        pass
+        '''
+        play the card in the list
+        return a list of cards
+        '''
+        card_list.sort(reverse = True)
+        result = []
+        for card_index in card_list:
+            card = self.hand.remove_card(card_index)
+            result.append(card)
+        return result
+
+    def is_hand_empty(self):
+        '''
+        return if the hand is empty
+        '''
+        return len(self.hand.hand) == 0
+        
        
         
 
