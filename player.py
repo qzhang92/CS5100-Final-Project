@@ -5,7 +5,16 @@ LANDLORD_UTIL = 50
 class Player:
     '''
     Represents the three player. The default role is peasant. 
-    Player 3 is computer
+    Player 3 is human
+    Player 1 is search_AI
+    Player 2 reinforcement_AI
+
+    Search_AI:
+    1. DFS
+    2. A* search
+    3. Heuristic search
+
+    4. Reinforcement learning
     '''
     def __init__(self, id):
         '''
