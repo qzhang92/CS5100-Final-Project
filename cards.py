@@ -6,6 +6,7 @@ played and managed by the player of a game.
 '''
 
 import random
+from functools import total_ordering
 
 # Char representations of suits
 # Hearts, Diamonds, Clubs, Spades
@@ -19,7 +20,7 @@ JOKERS = set(['BJoker', 'RJoker'])
 
 INITIAL_CARD_NUM = 17
 
-EXTRA_CARD_NUM
+EXTRA_CARD_NUM = 3
 
 
 
@@ -98,7 +99,6 @@ class Card:
         rank: str - A char representing a rank
             ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
         '''
-        print("{} {} {} end".format(suit, rank, joker))
         if suit not in SUITS:
             raise ValueError('invalid suit')
         if rank not in RANKS:
@@ -169,8 +169,20 @@ class Card:
 
         self.utf_suit = self.suit
 
+    def __eq__(self, other):
+        return (self.value == other.value)
+
+    def __ne__(self, other):
+        return not (self.value == other.value)
+
+    def __lt__(self, other):
+        return (self.value < other.value)
+
+
+    '''
     def compare(card_1, card_2):
         return card_1.value - card_2.value
+    '''
 
     def __str__(self):
         '''
@@ -265,7 +277,7 @@ class Hand:
             print(card)
 
     def sort_card(self):
-        self。hand.sort()
+        self.hand.sort()
 
     def __repr__(self):
         '''
