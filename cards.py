@@ -276,7 +276,7 @@ class Hand:
             print(i+1)
             print(card)
 
-    def sort_card(self):
+    def sort_cards(self):
         self.hand.sort()
 
     def __repr__(self):
