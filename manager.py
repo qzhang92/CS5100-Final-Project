@@ -1,4 +1,7 @@
-
+'''
+参考
+https://github.com/thuxugang/doudizhu/blob/master/myclass.py
+'''
 import cards
 
 class Manager:
