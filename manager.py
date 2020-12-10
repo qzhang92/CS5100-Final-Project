@@ -335,8 +335,16 @@ class Manager:
         https://github.com/thuxugang/doudizhu/blob/master/myclass.py
 
         Airplane and chain may be removed. They are super hard
+        legal actions is called every time you are on your turn
+
+        手上牌为三个3 actions【1】 = 【[1]， [2]， [3]】 action【2】 = [【1，2】] action[3] = [[1, 2, 3]] action[2]有去重
 
         The moves are based on 1-index card index. Because cards.Hand.remove(self, card_id)
+        There is a hand of cards. We evaluate every card by all ways of card play 1- 5 11 12
+        On way 1: we find all possible combinations of solo
+        Same applies to other ways 
+        return result : a dict, where key is 1 - 5 and 11 and 12 
+                        value is a list of card_list on possible action under key
         '''
         result = dict()
         card_dict = dict()
