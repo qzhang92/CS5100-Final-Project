@@ -3,7 +3,7 @@ import random
 
 import cards
 import player
-import manager
+import manager as mgr
 
 HUMAN_ID = 3
 
@@ -72,7 +72,7 @@ def game_play(players, landlord):
     '''
     cur = landlord
     positive = True
-    manager = manager.Manager()
+    manager = mgr.Manager()
     prev_action = -1 # repesented by an index. See manager.card_style
     last_player = 0
     prev_cards = []

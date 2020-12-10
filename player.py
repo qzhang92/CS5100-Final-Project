@@ -79,7 +79,7 @@ class Player:
         score += int(val / 5)
         return score
 
-    def card_play((self, card_list):
+    def card_play(self, card_list):
         '''
         play the card in the list
         return a list of cards

@@ -24,6 +24,9 @@ class Manager:
         '''
         self.card_style['bomb'] = 11
         self.card_style['rocket'] = 12
+        # 3 - 4 AI algorithm
+        # p1 = random.randint(1, 3) -> 1 DFS
+        # p2 = random.randint(1, 3) -> 3 A* search make sure p1 != p2
         
     
     def has_chain(self, card_list):
@@ -161,6 +164,8 @@ class Manager:
                             return -1
                 else: #len(card_dict) won't be 1, can be 3, 4, which are invalid
                     return -1
+            else:
+                return -1
             '''
             elif size == 6:
                 if len(card_dict) == size: # 6 different cards. maybe chain
@@ -222,8 +227,7 @@ class Manager:
                 else:
                     return -1
             '''
-            else:
-                return -1
+            
 
     def evaluate_cards(cur_cards, prev_action):
         '''
@@ -310,8 +314,17 @@ class Manager:
         '''
         AI is required here.
         Ai methods should be in manager.py or player.py?
-        return a list of card index. Card is 1 indexed
+        
         need to list all possible ways during positive play
+        player: current player
+        id: current player id 1/2 
+        positive: True if 主动出牌 False if 被动出牌
+        prev_action: 上一次出牌牌型 solo/pair/.. 用数字1 - 5 11 212 代替
+        prev_cards: 上一次出牌的排面 [Card obj]
+
+        return a list of card index. Card is 1 indexed
+        player.hand: Hand [H5 BJoker RJoker] -> [1, 2, 3] 
+        play card BJoker RJoker -> return [2, 3]
         '''
         pass
 
@@ -325,7 +338,7 @@ class Manager:
 
         The moves are based on 1-index card index. Because cards.Hand.remove(self, card_id)
         '''
-        result = dict{}
+        result = dict()
         card_dict = dict()
         for card in hand:
             key = int(card.value / 10)
