@@ -303,7 +303,35 @@ class Manager:
                 prev_key = key
         return True #chain
 
+    def AI_choose(self, player, positive, prev_action, prev_cards):
+        AI = random.randint(1, 3)
+        if AI == 1:
+            DFS(player, positive, prev_action, prev_cards)
+        elif AI == 2:
+            A_serach
+        else:
+            heuristic_search
 
+    def DFS(self, player, positive, prev_action, prev_cards):
+        visited = set()
+        if positive:
+            if prev_cards not in visited:
+                print(prev_cards)
+                visited.add(prev_cards)
+                for neighbour in my_util(hand, positive, prev_action, prev_cards):
+                    dfs(visited, graph, neighbour)
+
+    def my_util(self, hand, positive, prev_action, prev_cards):
+        valid = []
+        is_valid = (hand.card_list, hand, positive, prev_action, prev_cards)
+        valid = legal_actions(player.hand)
+            if hand ==
+
+
+    def AI_play(self, player, id, positive, prev_action, prev_cards):
+
+        if id == 1:
+            AI_choose(self, player, positive, prev_action, prev_cards)
 
 
     def AI_play(self, player, id, positive, prev_action, prev_cards):
