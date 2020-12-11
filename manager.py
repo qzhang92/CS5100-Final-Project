@@ -38,13 +38,16 @@ class Manager:
         cur_cards = []
         for index in card_list:
             cur_cards.append(hand[index])
+        
         if positive:
-            return self.get_action(cur_hands) != -1
+            return not self.get_action(cur_cards) == -1
         if len(card_list) != len(prev_cards):
             return False
         if prev_action != self.get_action(cur_cards):
             return False
-        return self.evaluate_cards(cur_cards, prev_action) > self.evaluate_cards(prev_cards, prev_action)
+        num1 = self.evaluate_cards(cur_cards, prev_action)
+        num2 = self.evaluate_cards(prev_cards, prev_action)
+        return num1 > num2
         
     
     def get_action(self, card_list):
@@ -68,7 +71,7 @@ class Manager:
         elif size == 3: # size == 3 is only possible with trio
             val = int(card_list[0].value / 10)
             for card in card_list:
-                if int(card.value / 10) != val:
+                if not int(card.value / 10) == val:
                     return -1 # not Trio
             return 3
         else:
@@ -299,11 +302,9 @@ class Manager:
 
         
     def greedy(self, player, id, positive, prev_action, prev_cards):
-        '''
-        This is a greedy search algorithm.
-        We find the cards with least utility under negative play
-        return a list of card index. Card is 1 indexed
-        '''
+        #This is a greedy search algorithm.
+        #We find the cards with least utility under negative play
+        #return a list of card index. Card is 1 indexed
         cur_card_list = player.hand.hand
         legal_actions = self.legal_actions(cur_card_list)
         if not positive:
@@ -346,7 +347,7 @@ class Manager:
                 card_list = legal_actions[12][0] # [int]
                 # cur_card = self.index_to_card(cur_card_list, card_list)
                 cur_util = self.util_greedy(card_list)
-                util_g = (12 * self.self.util_greedy()) / 2
+                util_g = (12 * self.util_greedy(card_list)) / 2
                 result = card_list
             if len(legal_actions[11]) > 0:
                 same_style_actions = legal_actions[11]

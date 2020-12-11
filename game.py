@@ -97,7 +97,7 @@ def game_play(players, landlord):
                 print(player.hand)
 
                 cards = input("Please choose what card you want to play. \n Example: if you want to play 1st and 13rd card, type in: 1 13. 1-indexed \n")
-                print(cards)
+                print(player.hand)
                 card_list, valid = handle_input(cards, len(player.hand.hand))
                 if valid and len(card_list) == 0 and positive:
                     print("Fisrt player must play cards.")
@@ -105,12 +105,16 @@ def game_play(players, landlord):
                 if valid and len(card_list) == 0: # Did not play card
                     break
                 if manager.is_valid_play(card_list, player.hand.hand, positive, prev_action, prev_cards):
-                    print("Play : {}".format(card_list))
+                    out_list = []
+                    for index in card_list:
+                        out_list.append(player.hand.hand[card_list[index]])
+                    print("Player {} plays {}".format(player.id, out_list))
                     prev_cards = player.card_play(card_list)
                     prev_action = manager.get_action(prev_cards)
                     valid = True
                     last_player = cur
                 else:
+                    valid = False
                     print("Wrong cards. Please choose again.")
             # Change positive if possible
             if positive:
@@ -118,16 +122,14 @@ def game_play(players, landlord):
         else: # Computer
             print("Prev_cards {} positive {} prev_action {}".format(prev_cards, positive, prev_action))
             card_list = manager.AI_play(player, player.id, positive, prev_action, prev_cards) # AI should play when it can play
-            if len(card_list) == 0:
-                continue
-            prev_cards = player.card_play(card_list)
-            last_player = cur
-            # Change positive if possible
-            if positive:
-                positive = False
-
+            if not len(card_list) == 0:
+                prev_cards = player.card_play(card_list)
+                last_player = cur
+                # Change positive if possible
+                if positive:
+                    positive = False
+        cur +=1
         cur = cur % 3
-        cur += 1
 
 
 def game_over(players):
@@ -152,14 +154,12 @@ def handle_input(cards, hand_len):
     cards = cards.strip().split()
     result = []
     for card in cards:
-        try:
-            index = int(card)
-            if index < 1 or index > hand_len:
-                return [], False
-            result.append(index)
-            return result
-        except ValueError:
+        index = int(card) - 1
+        if index < 0 or index > hand_len:
             return [], False
+        result.append(index)
+
+    return result, True
     
 
 if __name__ == '__main__':

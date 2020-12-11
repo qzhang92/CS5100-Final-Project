@@ -59,7 +59,7 @@ class Deck:
         Removes and returns a card from the top of the deck.
         '''
         if len(self.deck) <= 0:
-            raise DeckEmptyError()
+            raise ValueError('Deck is empty')
 
         return self.deck.pop()
 
@@ -291,15 +291,4 @@ class Hand:
         return "Hand(" + ', '.join(hand_repr) + ")"
 
 
-class HandFullError(Exception):
-    '''
-    Raised when a hand is full.
-    '''
-    pass
 
-
-class DeckEmptyError(Exception):
-    '''
-    Raised when an empty deck tries to deal a card.
-    '''
-    pass

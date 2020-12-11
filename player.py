@@ -82,7 +82,7 @@ class Player:
         card_list.sort(reverse = True)
         result = []
         for card_index in card_list:
-            card = self.hand.remove_card(card_index)
+            card = self.hand.remove_card(card_index + 1)
             result.append(card)
         return result
 
