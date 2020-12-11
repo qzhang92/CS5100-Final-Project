@@ -12,6 +12,8 @@ def main(argv):
     players = []
     for i in range(1, 4):
         players.append(player.Player(i))
+    
+    print(players)
 
     #Initiate deck
     deck = cards.Deck()
@@ -59,13 +61,15 @@ def handle_landlord(players, deck):
             for i in range(3):  #landlord will get 3 extra cards
                 card = deck.deal_card()
                 players[cur].add_card(card)
+                players[cur].hand.sort_cards()
             return cur
         else:
-            print("Player {} is peasant.".format(cur))
+            print("Player {} is peasant.".format(cur + 1))
         cur += 1
         cur = cur % 3
 
 def game_play(players, landlord):
+    # Players is 0 indexed. player_id is 1 indexed
     '''
     Game process.
     players will take turns to play cards.
@@ -79,15 +83,21 @@ def game_play(players, landlord):
     last_player = 0
     prev_cards = []
     while not game_over(players):
+        
+        player = players[cur]
+        print("Player {} play game".format(player.id))
 
         if last_player == cur and not positive:
             positive = True
 
-        if cur == 3: #human
+        if player.id == 3: #human
             valid = False
             while not valid:
                 # handle input
+                print(player.hand)
+
                 cards = input("Please choose what card you want to play. \n Example: if you want to play 1st and 13rd card, type in: 1 13. 1-indexed \n")
+                print(cards)
                 card_list, valid = handle_input(cards, len(player.hand.hand))
                 if valid and len(card_list) == 0 and positive:
                     print("Fisrt player must play cards.")
@@ -96,7 +106,7 @@ def game_play(players, landlord):
                     break
                 if manager.is_valid_play(card_list, player.hand.hand, positive, prev_action, prev_cards):
                     print("Play : {}".format(card_list))
-                    prev_cards = players[cur].card_play(card_list)
+                    prev_cards = player.card_play(card_list)
                     prev_action = manager.get_action(prev_cards)
                     valid = True
                     last_player = cur
@@ -106,10 +116,11 @@ def game_play(players, landlord):
             if positive:
                 positive = False
         else: # Computer
-            card_list = manager.AI_play(players[cur], cur, positive, prev_action, prev_cards) # AI should play when it can play
+            print("Prev_cards {} positive {} prev_action {}".format(prev_cards, positive, prev_action))
+            card_list = manager.AI_play(player, player.id, positive, prev_action, prev_cards) # AI should play when it can play
             if len(card_list) == 0:
                 continue
-            prev_cards = players[cur].card_play(card_list)
+            prev_cards = player.card_play(card_list)
             last_player = cur
             # Change positive if possible
             if positive:
