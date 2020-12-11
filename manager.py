@@ -1,7 +1,4 @@
-'''
-参考
-https://github.com/thuxugang/doudizhu/blob/master/myclass.py
-'''
+
 import cards
 import random
 import sys

@@ -13,9 +13,6 @@ class Player:
     Search_AI:
     1. DFS
     2. A* search
-    3. Heuristic search
-
-    4. Reinforcement learning
     '''
     def __init__(self, id):
         '''
