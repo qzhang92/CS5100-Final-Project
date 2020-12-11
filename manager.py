@@ -169,13 +169,6 @@ class Manager:
         '''
         AI is required here.
         Ai methods should be in manager.py or player.py?
-        
-        need to list all possible ways during positive play
-        player: current player
-        id: current player id 1/2 
-        positive: True if 主动出牌 False if 被动出牌
-        prev_action: 上一次出牌牌型 solo/pair/.. 用数字1 - 5 11 212 代替
-        prev_cards: 上一次出牌的排面 [Card obj]
 
         return a list of card index. Card is 1 indexed
         player.hand: Hand [H5 BJoker RJoker] -> [1, 2, 3] 
