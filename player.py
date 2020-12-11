@@ -59,21 +59,16 @@ class Player:
         score = 0
         card_list = self.hand.hand
         length = len(card_list)
-        if card_list[length - 1].value == 170 and card_list[length - 2].value == 160:
+        #if card_list[length - 1].value == 170 and card_list[length - 2].value == 160:
+        #    score += 16
+        legal_actions = self.manager.legal_actions(card_list)
+        if len(legal_actions[12]) > 0: # Rocket
             score += 16
-        if self.manager.has_chain(card_list) or self.manager.has_pair_chain(card_list) or self.manager.has_airplane(card_list):
-            score += 5
+        if len(legal_actions[11]) > 0: # Boomb
+            score += 8 * len(legal_actions[11])
         i = 0
         val = 0
         while i < length:
-            # bomb
-            if i <= length - 4 and card_list[i].value / 10 == card_list[i + 3].value / 10:
-                score += 8
-            # black joker, red joker
-            if card_list[i].value == 170:
-                score += 6
-            if card_list[i].value == 160:
-                score += 4
             val += int(card_list[i].value / 10)
             i += 1
         score += int(val / 5)

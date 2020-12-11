@@ -60,6 +60,8 @@ def handle_landlord(players, deck):
                 card = deck.deal_card()
                 players[cur].add_card(card)
             return cur
+        else:
+            print("Player {} is peasant.".format(cur))
         cur += 1
         cur = cur % 3
 
