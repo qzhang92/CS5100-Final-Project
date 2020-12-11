@@ -107,7 +107,7 @@ def game_play(players, landlord):
                 if manager.is_valid_play(card_list, player.hand.hand, positive, prev_action, prev_cards):
                     out_list = []
                     for index in card_list:
-                        out_list.append(player.hand.hand[card_list[index]])
+                        out_list.append(player.hand.hand[index])
                     print("Player {} plays {}".format(player.id, out_list))
                     prev_cards = player.card_play(card_list)
                     prev_action = manager.get_action(prev_cards)
@@ -124,6 +124,7 @@ def game_play(players, landlord):
             card_list = manager.AI_play(player, player.id, positive, prev_action, prev_cards) # AI should play when it can play
             if not len(card_list) == 0:
                 prev_cards = player.card_play(card_list)
+                prev_action = manager.get_action(prev_cards)
                 last_player = cur
                 # Change positive if possible
                 if positive:

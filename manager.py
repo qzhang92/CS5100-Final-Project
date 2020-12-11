@@ -320,7 +320,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = self.util_greedy(card_list)  # Todo
                     if cur_util > prev_util and util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
                 return result # Greedy will play card when it can play
             elif prev_action != 11 and len(legal_actions[11]) > 0: # handle bomb
@@ -332,7 +332,7 @@ class Manager:
                     # cur_card = self.index_to_card(cur_card_list, card_list)
                     cur_util = self.util_greedy(card_list)
                     if util_g > cur_util: # No prev_util with boomb
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
                 return result
             elif len(legal_actions[12]) > 0: # rocket There is only one rocket possible in the game
@@ -355,7 +355,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = (11 * self.util_greedy(card_list)) / 4  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             if len(legal_actions[5]) > 0:
                 same_style_actions = legal_actions[5]
@@ -363,7 +363,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int((2 * self.util_greedy(card_list)) / 5)  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             if len(legal_actions[4]) > 0:
                 same_style_actions = legal_actions[4]
@@ -371,7 +371,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(self.util_greedy(card_list) / 4)  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             if len(legal_actions[3]) > 0:
                 same_style_actions = legal_actions[3]
@@ -379,7 +379,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(5 * self.util_greedy(card_list) / 3)  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             if len(legal_actions[2]) > 0:
                 same_style_actions = legal_actions[2]
@@ -387,14 +387,14 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(3 * self.util_greedy(card_list) / 2)  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             if len(legal_actions[1]) > 0:
                 same_style_actions = legal_actions[1]
                 for card_list in same_style_actions:
                     cur_util = 4 * self.util_greedy(card_list)  # Todo
                     if util_g > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_g = cur_util
             return result
         
@@ -407,6 +407,7 @@ class Manager:
         cur_card_list = player.hand.hand
         legal_actions = self.legal_actions(cur_card_list)
         if not positive:
+            
             if len(legal_actions[prev_action]) == 0 and len(legal_actions[11]) == 0 and len(legal_actions[11]) == 0:
                 return [] # In this neg round, we do not have a card to play
             elif len(legal_actions[prev_action]) > 0:
@@ -417,9 +418,10 @@ class Manager:
                 for card_list in same_style_actions:
                     # card list is a [card]
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
+                    util_g = self.util_greedy(card_list) 
                     cur_util = self.util_greedy(card_list) + self.util_h(cur_card_list, card_list)  # Todo
-                    if cur_util > prev_util and util_g > cur_util:
-                        result = card_list
+                    if util_g > prev_util and util_a > cur_util:
+                        result = card_list.copy()
                         util_a = cur_util
                 return result # Greedy will play card when it can play
             elif prev_action != 11 and len(legal_actions[11]) > 0: # handle bomb
@@ -431,7 +433,7 @@ class Manager:
                     # cur_card = self.index_to_card(cur_card_list, card_list)
                     cur_util = self.util_greedy(card_list) + self.util_h(cur_card_list, card_list)
                     if util_a > cur_util: # No prev_util with boomb
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
                 return result
             elif len(legal_actions[12]) > 0: # rocket There is only one rocket possible in the game
@@ -447,14 +449,14 @@ class Manager:
                 # cur_card = self.index_to_card(cur_card_list, card_list)
                 cur_util = self.util_greedy(card_list)
                 util_a = (12 * cur_util) / 2 + self.util_h(cur_card_list, card_list)
-                result = card_list
+                result = card_list.copy()
             if len(legal_actions[11]) > 0:
                 same_style_actions = legal_actions[11]
                 for card_list in same_style_actions:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = (11 * self.util_greedy(card_list)) / 4  + self.util_h(cur_card_list, card_list) # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             if len(legal_actions[5]) > 0:
                 same_style_actions = legal_actions[5]
@@ -462,7 +464,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int((2 * self.util_greedy(card_list)) / 5) + self.util_h(cur_card_list, card_list)  # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             if len(legal_actions[4]) > 0:
                 same_style_actions = legal_actions[4]
@@ -470,7 +472,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(self.util_greedy(card_list) / 4) + self.util_h(cur_card_list, card_list)  # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             if len(legal_actions[3]) > 0:
                 same_style_actions = legal_actions[3]
@@ -478,7 +480,7 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(5 * self.util_greedy(card_list) / 3) + self.util_h(cur_card_list, card_list)  # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             if len(legal_actions[2]) > 0:
                 same_style_actions = legal_actions[2]
@@ -486,14 +488,14 @@ class Manager:
                     #cur_card = self.index_to_card(cur_card_list, card_list) # Todo
                     cur_util = int(3 * self.util_greedy(card_list) / 2) + self.util_h(cur_card_list, card_list)  # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             if len(legal_actions[1]) > 0:
                 same_style_actions = legal_actions[1]
                 for card_list in same_style_actions:
                     cur_util = 4 * self.util_greedy(card_list) + self.util_h(cur_card_list, card_list)  # Todo
                     if util_a > cur_util:
-                        result = card_list
+                        result = card_list.copy()
                         util_a = cur_util
             return result
 
